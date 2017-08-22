@@ -27,12 +27,6 @@ Resources:
           Parameters:
             Location: !Join ["", ["s3://",!Ref cloudformationsBucket, "/microservice-template/awsoptions/role.yaml"]]
 
-  s3Deploy:
-    Type: "AWS::CloudFormation::Stack"
-    Properties:
-      TemplateURL: !Join ["", ["https://s3.amazonaws.com/deploy-forms-larkin", "/forms/resources/s3.yaml"]]
-      TimeoutInMinutes: 2
-
   codebuild:
     Type: "AWS::CloudFormation::Stack"
     DependsOn:
