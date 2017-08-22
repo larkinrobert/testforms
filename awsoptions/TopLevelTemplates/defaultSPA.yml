@@ -75,27 +75,3 @@ Outputs:
     Export:
       Name:
         Fn::Sub: ${AWS::StackName}-apiMethodId
-  gitHubProjectName:
-    Value:
-      Fn::GetAtt: [codebuild, Outputs.gitHubProjectName]
-    Export:
-      Name:
-        Fn::Sub: ${AWS::StackName}-gitHubProjectName
-  gitHubRepoUrl:
-    Value:
-      Fn::GetAtt: [codebuild, Outputs.gitHubRepoUrl]
-    Export:
-      Name:
-        Fn::Sub: ${AWS::StackName}-gitHubRepoUrl
-  gitHubRepoName:
-    Value:
-      Fn::GetAtt: [codebuild, Outputs.gitHubRepoName]
-    Export:
-      Name:
-        Fn::Sub: ${AWS::StackName}-gitHubRepoName
-  artifactFileName:
-    Value:
-      Fn::GetAtt: [codebuild, Outputs.artifactFileName]
-    Export:
-      Name:
-        Fn::Sub: ${AWS::StackName}-artifactFileName
