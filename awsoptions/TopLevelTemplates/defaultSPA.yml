@@ -27,25 +27,6 @@ Resources:
           Parameters:
             Location: !Join ["", ["s3://",!Ref cloudformationsBucket, "/microservice-template/awsoptions/role.yaml"]]
 
-  codebuild:
-    Type: "AWS::CloudFormation::Stack"
-    DependsOn:
-      - s3Deploy
-      - role
-    Properties:
-      TemplateURL: !Join ["", ["https://s3.amazonaws.com/deploy-forms-larkin", "/forms/resources/codebuild.yaml"]]
-      TimeoutInMinutes: 2
-      Parameters:
-        s3Deploy:
-          Fn::GetAtt: [s3Deploy, Outputs.s3Name]
-        roleArn:
-          Fn::GetAtt: [role, Outputs.roleArn]
-        stackName: !Ref "AWS::StackName"
-        'Fn::Transform':
-          Name: 'AWS::Include'
-          Parameters:
-            Location: !Join ["", ["s3://",!Ref cloudformationsBucket, "/microservice-template/awsoptions/codebuild.yaml"]]
-
   api:
     Type: "AWS::CloudFormation::Stack"
     Properties:
@@ -94,18 +75,6 @@ Outputs:
     Export:
       Name:
         Fn::Sub: ${AWS::StackName}-apiMethodId
-  codeBuild:
-    Value:
-      Fn::GetAtt: [codebuild, Outputs.codeBuildName]
-    Export:
-      Name:
-        Fn::Sub: ${AWS::StackName}-codeBuild
-  codeBuildArn:
-    Value:
-      Fn::GetAtt: [codebuild, Outputs.codeBuildArn]
-    Export:
-      Name:
-        Fn::Sub: ${AWS::StackName}-codeBuildArn
   gitHubProjectName:
     Value:
       Fn::GetAtt: [codebuild, Outputs.gitHubProjectName]
