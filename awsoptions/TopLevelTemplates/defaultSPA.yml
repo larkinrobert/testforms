@@ -54,14 +54,10 @@ Resources:
 
   api:
     Type: "AWS::CloudFormation::Stack"
-    DependsOn:
-      - lambdaPermissionApi
     Properties:
       TemplateURL: !Join ["", ["https://s3.amazonaws.com/deploy-forms-larkin", "/forms/resources/api.yaml"]]
       TimeoutInMinutes: 2
       Parameters:
-        lambdaArn:
-          Fn::GetAtt: [lambda, Outputs.lambdaArn]
         'Fn::Transform':
           Name: 'AWS::Include'
           Parameters:
