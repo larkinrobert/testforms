@@ -1,0 +1,142 @@
+
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: default SPA Atom
+
+Parameters:
+  awsAccountId:
+    Type: String
+    Default: "false"
+  cloudformationsBucket:
+    Type: String
+    Default: "false"
+  deploymentStage:
+    Type: String
+    Default: dev
+
+Resources:
+
+  role:
+    Type: "AWS::CloudFormation::Stack"
+    Properties:
+      TemplateURL: !Join ["", ["https://s3.amazonaws.com/deploy-forms-larkin", "/forms/resources/role.yaml"]]
+      TimeoutInMinutes: 2
+      Parameters:
+        'Fn::Transform':
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Join ["", ["s3://",!Ref cloudformationsBucket, "/microservice-template/awsoptions/role.yaml"]]
+
+  s3Deploy:
+    Type: "AWS::CloudFormation::Stack"
+    Properties:
+      TemplateURL: !Join ["", ["https://s3.amazonaws.com/deploy-forms-larkin", "/forms/resources/s3.yaml"]]
+      TimeoutInMinutes: 2
+
+  codebuild:
+    Type: "AWS::CloudFormation::Stack"
+    DependsOn:
+      - s3Deploy
+      - role
+    Properties:
+      TemplateURL: !Join ["", ["https://s3.amazonaws.com/deploy-forms-larkin", "/forms/resources/codebuild.yaml"]]
+      TimeoutInMinutes: 2
+      Parameters:
+        s3Deploy:
+          Fn::GetAtt: [s3Deploy, Outputs.s3Name]
+        roleArn:
+          Fn::GetAtt: [role, Outputs.roleArn]
+        stackName: !Ref "AWS::StackName"
+        'Fn::Transform':
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Join ["", ["s3://",!Ref cloudformationsBucket, "/microservice-template/awsoptions/codebuild.yaml"]]
+
+  api:
+    Type: "AWS::CloudFormation::Stack"
+    DependsOn:
+      - lambdaPermissionApi
+    Properties:
+      TemplateURL: !Join ["", ["https://s3.amazonaws.com/deploy-forms-larkin", "/forms/resources/api.yaml"]]
+      TimeoutInMinutes: 2
+      Parameters:
+        lambdaArn:
+          Fn::GetAtt: [lambda, Outputs.lambdaArn]
+        'Fn::Transform':
+          Name: 'AWS::Include'
+          Parameters:
+            Location: !Join ["", ["s3://",!Ref cloudformationsBucket, "/microservice-template/awsoptions/api.yaml"]]
+
+Outputs:
+  roleName:
+    Value:
+      Fn::GetAtt: [role, Outputs.roleName]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-roleName
+  roleArn:
+    Value:
+      Fn::GetAtt: [role, Outputs.roleArn]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-roleArn
+  apiRootResourceId:
+    Value:
+      Fn::GetAtt: [api, Outputs.apiRootResourceId]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-apiRootResourceId
+  apiId:
+    Value:
+      Fn::GetAtt: [api, Outputs.apiId]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-apiId
+  apiResourceId:
+    Value:
+      Fn::GetAtt: [api, Outputs.apiResourceId]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-apiResourceId
+  apiMethodId:
+    Value:
+      Fn::GetAtt: [api, Outputs.apiMethodId]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-apiMethodId
+  codeBuild:
+    Value:
+      Fn::GetAtt: [codebuild, Outputs.codeBuildName]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-codeBuild
+  codeBuildArn:
+    Value:
+      Fn::GetAtt: [codebuild, Outputs.codeBuildArn]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-codeBuildArn
+  gitHubProjectName:
+    Value:
+      Fn::GetAtt: [codebuild, Outputs.gitHubProjectName]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-gitHubProjectName
+  gitHubRepoUrl:
+    Value:
+      Fn::GetAtt: [codebuild, Outputs.gitHubRepoUrl]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-gitHubRepoUrl
+  gitHubRepoName:
+    Value:
+      Fn::GetAtt: [codebuild, Outputs.gitHubRepoName]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-gitHubRepoName
+  artifactFileName:
+    Value:
+      Fn::GetAtt: [codebuild, Outputs.artifactFileName]
+    Export:
+      Name:
+        Fn::Sub: ${AWS::StackName}-artifactFileName

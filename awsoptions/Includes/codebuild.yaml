@@ -1,0 +1,74 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: codeBuild
+Parameters:
+
+  s3Deploy:
+    Type: String
+    Default: "false"
+
+  gitHubRepoUrl:
+    Type: String
+    Default: "false"
+
+  gitHubRepoName:
+    Type: String
+    Default: "false"
+
+  gitHubProjectName:
+    Type: String
+    Default: "false"
+
+  roleArn:
+    Type: String
+    Default: "false"
+
+  stackName:
+    Type: String
+    Default: "false"
+
+Resources:
+
+  codeBuildWantsAUniqueRole:
+    Type: "AWS::CloudFormation::Stack"
+    Properties:
+      TemplateURL: "https://s3.amazonaws.com/deploy-forms-larkin/forms/resources/role.yaml"
+      TimeoutInMinutes: 2
+      Parameters:
+        roleServiceList: "codebuild.amazonaws.com"
+        policyActionList: "ec2:*,xray:*,lambda:*,dynamodb:*,apigateway:*,s3:*,codebuild:*,logs:*,sns:*,ses:*" 
+
+  BuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Join ["", [!Ref gitHubRepoName, "build"]]
+      ServiceRole: !Ref roleArn
+      Artifacts:
+        Type: S3
+        Location: !Ref s3Deploy
+        Packaging: NONE
+      Environment:
+        Type: linuxContainer
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: "aws/codebuild/nodejs:6.3.1"
+      Source:
+        Location: !Join ["", [!Ref gitHubRepoUrl, "/", !Ref gitHubProjectName, "/", !Ref gitHubRepoName, ".git"]]
+        Type: GITHUB
+      TimeoutInMinutes: 10
+
+Outputs:
+  codeBuildArn:
+    Value: !GetAtt BuildProject.Arn
+  codeBuildName:
+    Value: !Ref BuildProject
+  artifactFileName:
+    Value: !Join ["", ["deploy-", !Ref gitHubRepoName, ".zip"]]
+  gitHubRepoUrl:
+    Value: !Ref gitHubRepoUrl
+  gitHubRepoName:
+    Value: !Ref gitHubRepoName
+  gitHubProjectName:
+    Value: !Ref gitHubProjectName
+  stackName:
+    Value: !Ref stackName
+
