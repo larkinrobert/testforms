@@ -18,4 +18,4 @@ Resources:
   "Fn::Transform":
     Name: "AWS::Include"
     Parameters:
-      Location: !Sub "s3://${deploybucket}/forms/awsoptions/transform.yml"
+      Location: !Sub "s3://${deploybucket}/forms/awsoptions/Includes/transform.yml"
