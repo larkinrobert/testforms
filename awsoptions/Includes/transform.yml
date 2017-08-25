@@ -73,7 +73,7 @@ Resources:
       - apiDeployment
     Type: AWS::ApiGateway::Stage
     Properties:
-      DeploymentId: !Ref apiDeployment
+      DeploymentId: deployment
       MethodSettings:
         -
           DataTraceEnabled: true
