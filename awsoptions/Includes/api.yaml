@@ -5,16 +5,16 @@ Description: api
 Parameters:
   masterapi:
     Type: String
-    Default: p4hsicweb5
+    Default: 3c379kpo75
   masterresource:
     Type: String
-    Default: marbnv
+    Default: r10kgs
   deploybucket:
     Type: String
     Default: deploy-forms-larkin
   deployment:
     Type: String
-    Default: jn9t2q
+    Default: pevgj9
 
 
 Resources:
