@@ -1,6 +1,17 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: local api
 
+Parameters:
+  masterapi:
+    Type: String
+    Default: false
+  masterresource:
+    Type: String
+    Default: false
+  deploybucket:
+    Type: String
+    Default: false
+
 Resources:
 
   apiResource:
