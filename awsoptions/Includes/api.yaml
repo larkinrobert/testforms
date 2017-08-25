@@ -18,4 +18,4 @@ Resources:
   LocalAPI:
     Type: "AWS::CloudFormation::Stack"
     Properties:
-      TemplateURL: !Join ["", ["s3://",!Ref deploybucket, "/forms/awsoptions/Includes/transform.yml"]]
+      TemplateURL: !Join ["", ["https://s3.amazonaws.com/",!Ref deploybucket, "/forms/awsoptions/Includes/transform.yml"]]
