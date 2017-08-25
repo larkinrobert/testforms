@@ -1,36 +1,41 @@
-apiResource:
-  Type: "AWS::ApiGateway::Resource"
-  Properties:
-    RestApiId: !Ref masterapi
-    ParentId: !Ref masterresource
-    PathPart: provision
+AWSTemplateFormatVersion: '2010-09-09'
+Description: local api
 
-apiGatewayMethodOptions:
-  Type: "AWS::ApiGateway::Method"
-  Properties:
-    ResourceId: !Ref apiResource
-    RestApiId: !Ref masterapi
-    AuthorizationType: NONE
-    HttpMethod: OPTIONS
-    MethodResponses:
-    -
-      StatusCode: 200
-      ResponseParameters:
-        "method.response.header.Access-Control-Allow-Origin": true
-        "method.response.header.Access-Control-Allow-Headers": true
-        "method.response.header.Access-Control-Allow-Methods": true
-        "method.response.header.Access-Control-Allow-Credentials": true
-    Integration:
-      Type: MOCK
-      RequestTemplates:
-        "application/json": "{statusCode:200}"
-      IntegrationResponses:
+Resources:
+
+  apiResource:
+    Type: "AWS::ApiGateway::Resource"
+    Properties:
+      RestApiId: !Ref masterapi
+      ParentId: !Ref masterresource
+      PathPart: provision
+
+  apiGatewayMethodOptions:
+    Type: "AWS::ApiGateway::Method"
+    Properties:
+      ResourceId: !Ref apiResource
+      RestApiId: !Ref masterapi
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      MethodResponses:
       -
         StatusCode: 200
         ResponseParameters:
-          "method.response.header.Access-Control-Allow-Origin": "'*'"
-          "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-          "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,ANY'"
-          "method.response.header.Access-Control-Allow-Credentials": "'false'"
-        ResponseTemplates:
-          "application/json": ""
+          "method.response.header.Access-Control-Allow-Origin": true
+          "method.response.header.Access-Control-Allow-Headers": true
+          "method.response.header.Access-Control-Allow-Methods": true
+          "method.response.header.Access-Control-Allow-Credentials": true
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          "application/json": "{statusCode:200}"
+        IntegrationResponses:
+        -
+          StatusCode: 200
+          ResponseParameters:
+            "method.response.header.Access-Control-Allow-Origin": "'*'"
+            "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,ANY'"
+            "method.response.header.Access-Control-Allow-Credentials": "'false'"
+          ResponseTemplates:
+            "application/json": ""

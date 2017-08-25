@@ -15,7 +15,6 @@ Parameters:
 
 
 Resources:
-  "Fn::Transform":
-    Name: "AWS::Include"
-    Parameters:
-      Location: !Sub "s3://${deploybucket}/forms/awsoptions/Includes/transform.yml"
+  Type: "AWS::CloudFormation::Stack"
+  Properties:
+    TemplateURL: !Sub "s3://${deploybucket}/forms/awsoptions/Includes/transform.yml"
