@@ -59,14 +59,14 @@ Resources:
       - apiDeployment
     Type: AWS::ApiGateway::Stage
     Properties:
-      DeploymentId: !Ref apiDeployment
+      DeploymentId: !Ref deployment
       MethodSettings:
         -
           DataTraceEnabled: true
           HttpMethod: "*"
           LoggingLevel: INFO
           ResourcePath: "/*"
-      RestApiId: !Ref api
+      RestApiId: !Ref masterapi
       StageName: dev
   apiGatewayStageProd:
     DependsOn:
@@ -80,7 +80,7 @@ Resources:
           HttpMethod: "*"
           LoggingLevel: INFO
           ResourcePath: "/*"
-      RestApiId: !Ref api
+      RestApiId: !Ref masterapi
       StageName: prod
   apiGatewayTest:
     DependsOn:
@@ -94,6 +94,6 @@ Resources:
           HttpMethod: "*"
           LoggingLevel: INFO
           ResourcePath: "/*"
-      RestApiId: !Ref api
+      RestApiId: !Ref masterapi
       StageName: test
 

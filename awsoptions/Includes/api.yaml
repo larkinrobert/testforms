@@ -26,3 +26,4 @@ Resources:
         masterapi: !Ref masterapi
         masterresource: !Ref masterresource
         deploybucket: !Ref deploybucket
+        deployment: !Ref deployment
