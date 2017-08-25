@@ -55,8 +55,6 @@ Resources:
             "application/json": ""
 
   apiGatewayStageDev:
-    DependsOn:
-      - apiDeployment
     Type: AWS::ApiGateway::Stage
     Properties:
       DeploymentId: !Ref deployment
@@ -69,8 +67,6 @@ Resources:
       RestApiId: !Ref masterapi
       StageName: dev
   apiGatewayStageProd:
-    DependsOn:
-      - apiDeployment
     Type: AWS::ApiGateway::Stage
     Properties:
       DeploymentId: deployment
@@ -83,8 +79,6 @@ Resources:
       RestApiId: !Ref masterapi
       StageName: prod
   apiGatewayTest:
-    DependsOn:
-      - apiDeployment
     Type: AWS::ApiGateway::Stage
     Properties:
       DeploymentId: !Ref deployment
